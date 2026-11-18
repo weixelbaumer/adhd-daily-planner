@@ -1,11 +1,15 @@
 ---
 name: adhd-daily-planner
 version: 1.1.0
-description: "This skill should be used when the user asks to 'plan my day', 'help me plan today', 'morning planning', 'what should I work on today', 'daily planner', 'evening reflection', 'reflect on my day', 'migrate tasks', 'carry tasks forward', 'rapid log', 'brain dump my tasks', or mentions ADHD-friendly planning, time-blindness, swim lanes, energy-based task management, bullet journal for ADHD, or dopamine menu. Provides a BuJo-style daily planning system with swim lanes, migration, reflection, and dopamine rewards. Part of the ADHD-founder.com ecosystem."
+description: "Use when planning/reviewing the day. ADHD BuJo planner."
 homepage: https://adhd-founder.com
 author: ADHD-founder.com
 license: MIT
 keywords: [adhd, planner, bullet-journal, daily, productivity, time-blindness, bujo, planning, founders, dopamine, migration, swim-lanes, energy-management, reflection, neurodivergent, executive-function]
+metadata:
+  hermes:
+    tags: [adhd, planner, bullet-journal, daily, reflection, productivity]
+    related_skills: [adhd-body-doubling]
 ---
 
 # ADHD Daily Planner 📝🧠
@@ -32,6 +36,29 @@ Provides a bullet journal (BuJo) style daily planning system designed for ADHD b
 **"Migration is success, not failure"**
 **"Swim lanes, not time blocks"**
 **"Intent > Schedule"**
+
+---
+
+## Hermes Agent Runtime (read first)
+
+This fork runs on [Hermes Agent](https://hermes-agent.nousresearch.com). Where the sections below differ, this one wins.
+
+**When to use:** "plan my day", "what should I work on today", morning planning, evening reflection, migrate / carry tasks forward, rapid log, brain dump, swim lanes, energy-based task management — in any language (German, e.g.: "Plan meinen Tag", "Was mach ich heute?", "Tagesreflexion", "Brain-Dump", "offene Aufgaben übertragen").
+
+- **Invoke:** `/adhd-daily-planner plan`. Hermes registers the skill name as the slash command, so every `/adhd-planner <cmd>` below means `/adhd-daily-planner <cmd>` and every `/body-doubling <cmd>` means `/adhd-body-doubling <cmd>`. Plain language works too.
+- **Language & tone:** the user's language; short; no shaming.
+- **Storage:** `$ADHD_PLANNER_DIR`, default `~/.hermes/data/adhd-daily-planner/`, with `daily/YYYY-MM-DD.md`, `monthly/YYYY-MM.md`, `collections/<name>.md`. Daily files follow `templates/daily.md`. Get today's date from `date +%F`, never guess it.
+- **Never overwrite a daily file** — merge into it (it may already hold logged or carried-over tasks). `plan.sh plan` overwrites; the agent must not.
+- **Task states** (checkbox): `- [ ]` open · `- [x]` done · `- [>] task (→ date)` migrated · `- [<] task (→ date)` scheduled · `- [~] ~~task~~` dropped. Only `- [ ]` is open, so nothing gets carried twice.
+- **Commands → files:**
+  - `plan`: run `migrate` first if an earlier daily file still has `- [ ]` lines; show the last reflection's "One Thing for Tomorrow". Then ONE thing as `★` under MUST HAPPEN, energy 1–10 → lane, rapid log sorted into lanes, reward.
+  - `today`: read today's file; lanes, progress (done vs. open), lane for the current energy.
+  - `log <task>`: append `- [ ] <task>` under RAPID LOG. `done <task>`: set `- [x]`; if not found, add `- × <task>` under Today's Wins.
+  - `reflect`: fill EVENING REFLECTION (wins, worked, didn't, one thing for tomorrow), then decide every open task with the user: `>` → add `- [ ] task` to the next day's file; `<` → to that date's file (create missing files from the template); `×`; drop. Mark the source line (states above).
+  - `migrate`: the same decisions for every earlier daily file that still has `- [ ]` lines (find them with grep; gaps between days are normal); target = today. Point out tasks that migrated 3+ times (`references/migration.md`).
+  - `monthly`: `monthly/YYYY-MM.md` from `templates/monthly.md`.
+- **Body doubling:** once the ONE thing is set, offer `/adhd-body-doubling start 25` or `50` (that skill schedules real check-ins).
+- **`scripts/plan.sh`** is for the user's own terminal (interactive prompts), not for the agent; it uses the same storage directory.
 
 ---
 
