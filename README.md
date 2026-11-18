@@ -1,20 +1,38 @@
-# ADHD Daily Planner 📝🧠
+# ADHD Daily Planner 📝🧠 — Hermes Agent port
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Version](https://img.shields.io/badge/version-1.1.0-green)]()
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-1.1.1%2Bhermes.1-green)]()
+
+> **Fork notice:** This is a fork of [jankutschera/adhd-daily-planner](https://github.com/jankutschera/adhd-daily-planner) by Jan Kutschera ([ADHD-founder.com](https://adhd-founder.com)), MIT-licensed. The planning method, texts and templates are his work. This fork removes the OpenClaw coupling and adapts the skill for [Hermes Agent](https://hermes-agent.nousresearch.com) — see [Changes in this fork](#changes-in-this-fork).
 
 **A bullet journal style planner that works WITH your ADHD brain, not against it.** Built by [ADHD-founder.com](https://adhd-founder.com) -- German Engineering for the ADHD Brain.
 
 > Traditional planners fail ADHD brains: rigid time slots we ignore, fixed layouts that create guilt, and no way to carry tasks forward without feeling like a failure. This planner uses swim lanes (energy-based, not time-based), task migration (strategy, not failure), and rapid logging to match how your brain actually works.
 
+## Changes in this fork
+
+- **Based on v1.1.1**, the author's latest published release (the original repository is still at v1.0).
+- **No OpenClaw coupling:** storage in `~/.hermes/data/adhd-daily-planner/` (override: `ADHD_PLANNER_DIR`); OpenClaw metadata and install instructions removed; the skill is named `adhd-daily-planner` again, matching the repository.
+- **Hermes runtime rules** (SKILL.md): daily files are merged, never overwritten; explicit task states (`[ ]` `[x]` `[>]` `[<]` `[~]`) so nothing is carried over twice; migration across skipped days; hand-off to body doubling.
+- **Bug fixes in `scripts/plan.sh`:** `today` always crashed; `log`/`done` without a task died with "unbound variable".
+- **LICENSE file added:** the original declares MIT (SKILL.md, README) but ships no license file; this fork adds the standard MIT text with the original copyright holder.
+
+## Install (Hermes Agent)
+
+```bash
+hermes skills install weixelbaumer/adhd-daily-planner/ --category productivity
+```
+
 ## Quick Start
 
 ```
-/adhd-planner plan      # Morning intent + rapid log + swim lanes
-/adhd-planner today     # View today's swim lanes (match your energy)
-/adhd-planner reflect   # Evening reflection (what worked, what didn't)
-/adhd-planner migrate   # Carry unfinished tasks forward (no guilt)
+/adhd-daily-planner plan      # Morning intent + rapid log + swim lanes
+/adhd-daily-planner today     # View today's swim lanes (match your energy)
+/adhd-daily-planner reflect   # Evening reflection (what worked, what didn't)
+/adhd-daily-planner migrate   # Carry unfinished tasks forward (no guilt)
 ```
+
+Plain language works too ("plan my day").
 
 Or run standalone:
 ```bash
@@ -26,7 +44,7 @@ chmod +x scripts/plan.sh
 
 ### Morning: Set Your ONE Thing
 ```
-/adhd-planner plan
+/adhd-daily-planner plan
 ```
 1. "What ONE thing must happen for today to be a success?"
 2. Energy check (1-10) -- suggests which swim lane to start in
@@ -36,7 +54,7 @@ chmod +x scripts/plan.sh
 
 ### During the Day: Match Your Energy
 ```
-/adhd-planner today
+/adhd-daily-planner today
 ```
 No rigid time slots. Work in whichever swim lane matches your CURRENT energy:
 
@@ -50,7 +68,7 @@ No rigid time slots. Work in whichever swim lane matches your CURRENT energy:
 
 ### Evening: Learn From the Day
 ```
-/adhd-planner reflect
+/adhd-daily-planner reflect
 ```
 List wins, note what worked, migrate unfinished tasks, capture one lesson for tomorrow.
 
@@ -58,14 +76,14 @@ List wins, note what worked, migrate unfinished tasks, capture one lesson for to
 
 | Command | What It Does |
 |---------|-------------|
-| `/adhd-planner plan` | Morning intent setting + rapid log |
-| `/adhd-planner today` | View today's swim lanes and progress |
-| `/adhd-planner reflect` | Evening reflection + migration |
-| `/adhd-planner migrate` | Carry unfinished tasks forward |
-| `/adhd-planner log [task]` | Quick add to today's rapid log |
-| `/adhd-planner done [task]` | Mark task complete |
-| `/adhd-planner dopamine` | Show dopamine menu rewards |
-| `/adhd-planner founder` | ADHD-founder.com premium info |
+| `/adhd-daily-planner plan` | Morning intent setting + rapid log |
+| `/adhd-daily-planner today` | View today's swim lanes and progress |
+| `/adhd-daily-planner reflect` | Evening reflection + migration |
+| `/adhd-daily-planner migrate` | Carry unfinished tasks forward |
+| `/adhd-daily-planner log [task]` | Quick add to today's rapid log |
+| `/adhd-daily-planner done [task]` | Mark task complete |
+| `/adhd-daily-planner dopamine` | Show dopamine menu rewards |
+| `/adhd-daily-planner founder` | ADHD-founder.com premium info |
 
 ## Key Symbols
 
@@ -89,14 +107,14 @@ List wins, note what worked, migrate unfinished tasks, capture one lesson for to
 
 ## Works Great With
 
-Pair with [adhd-body-doubling](https://github.com/jankutschera/adhd-body-doubling) for full ADHD support:
+Pair with [adhd-body-doubling](https://github.com/weixelbaumer/adhd-body-doubling) (Hermes port of [the original](https://github.com/jankutschera/adhd-body-doubling)) for full ADHD support:
 
 ```
-/adhd-planner plan          → Pick your ONE thing
-/body-doubling start 50     → Work on it with accountability
-/body-doubling done         → Session autopsy
-/adhd-planner reflect       → Evening reflection
-/adhd-planner migrate       → Carry tasks forward
+/adhd-daily-planner plan        → Pick your ONE thing
+/adhd-body-doubling start 50    → Work on it with accountability
+/adhd-body-doubling done        → Session autopsy
+/adhd-daily-planner reflect     → Evening reflection
+/adhd-daily-planner migrate     → Carry tasks forward
 ```
 
 ## File Structure
@@ -111,7 +129,7 @@ Pair with [adhd-body-doubling](https://github.com/jankutschera/adhd-body-doublin
 
 ---
 
-## About ADHD-founder.com
+## About ADHD-founder.com (original author)
 
 **"German Engineering for the ADHD Brain"**
 
@@ -129,11 +147,11 @@ This planner is a free, fully functional daily planning system. It's also part o
 
 ## Contributing
 
-Issues and PRs welcome. If you've found an ADHD-friendly planning pattern that works, share it.
+Issues and PRs welcome. Ideas for the planning method itself are best shared with the original at [jankutschera/adhd-daily-planner](https://github.com/jankutschera/adhd-daily-planner).
 
 ## License
 
-MIT -- see [LICENSE](LICENSE)
+MIT -- see [LICENSE](LICENSE). Original work © 2026 ADHD-founder.com (Jan Kutschera); changes in this fork © 2026 Stefan Weixelbaumer.
 
 ---
 

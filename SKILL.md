@@ -1,20 +1,21 @@
 ---
 name: adhd-daily-planner
-version: 1.1.0
+version: 1.1.1+hermes.1
 description: "Use when planning/reviewing the day. ADHD BuJo planner."
-homepage: https://adhd-founder.com
-author: ADHD-founder.com
+homepage: https://github.com/weixelbaumer/adhd-daily-planner
+author: "Jan Kutschera / ADHD-founder.com (original); Stefan Weixelbaumer (Hermes port)"
 license: MIT
 keywords: [adhd, planner, bullet-journal, daily, productivity, time-blindness, bujo, planning, founders, dopamine, migration, swim-lanes, energy-management, reflection, neurodivergent, executive-function]
 metadata:
   hermes:
     tags: [adhd, planner, bullet-journal, daily, reflection, productivity]
     related_skills: [adhd-body-doubling]
+  upstream: "https://github.com/jankutschera/adhd-daily-planner (v1.1.1, Jan Kutschera / ADHD-founder.com, MIT)"
 ---
 
 # ADHD Daily Planner 📝🧠
 
-**Part of the [ADHD-founder.com](https://adhd-founder.com) Ecosystem**
+**Hermes Agent port of [adhd-daily-planner](https://github.com/jankutschera/adhd-daily-planner) by Jan Kutschera / [ADHD-founder.com](https://adhd-founder.com) (MIT)**
 *"Time-blindness friendly. Migration supported. Dopamine optimized."*
 
 ---
