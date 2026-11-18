@@ -164,8 +164,8 @@ cmd_today() {
     done
     
     # Show completion stats
-    COMPLETED=$(grep -c '^\- \[x\]\|^\- \[X\]' "$TODAY_FILE" 2>/dev/null || echo "0")
-    TOTAL=$(grep -c '^\- \[ \]' "$TODAY_FILE" 2>/dev/null || echo "0")
+    COMPLETED=$(grep -c '^\- \[x\]\|^\- \[X\]' "$TODAY_FILE" 2>/dev/null || true)
+    TOTAL=$(grep -c '^\- \[ \]' "$TODAY_FILE" 2>/dev/null || true)
     TOTAL=$((TOTAL + COMPLETED))
     
     echo "📊 Progress: $COMPLETED/$TOTAL tasks"
@@ -695,11 +695,11 @@ case "${1:-today}" in
     ;;
   log)
     shift
-    cmd_log "$1"
+    cmd_log "${1:-}"
     ;;
   done)
     shift
-    cmd_done "$1"
+    cmd_done "${1:-}"
     ;;
   dopamine|menu)
     cmd_dopamine
