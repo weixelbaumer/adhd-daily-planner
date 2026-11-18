@@ -1,18 +1,11 @@
 # ADHD Daily Planner 📝🧠
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![OpenClaw](https://img.shields.io/badge/OpenClaw-skill-blue)](https://openclaw.ai)
 [![Version](https://img.shields.io/badge/version-1.1.0-green)]()
 
 **A bullet journal style planner that works WITH your ADHD brain, not against it.** Built by [ADHD-founder.com](https://adhd-founder.com) -- German Engineering for the ADHD Brain.
 
 > Traditional planners fail ADHD brains: rigid time slots we ignore, fixed layouts that create guilt, and no way to carry tasks forward without feeling like a failure. This planner uses swim lanes (energy-based, not time-based), task migration (strategy, not failure), and rapid logging to match how your brain actually works.
-
-## Install
-
-```bash
-openclaw install adhd-daily-planner
-```
 
 ## Quick Start
 
@@ -109,7 +102,7 @@ Pair with [adhd-body-doubling](https://github.com/jankutschera/adhd-body-doublin
 ## File Structure
 
 ```
-~/.openclaw/skills/adhd-daily-planner/
+~/.hermes/data/adhd-daily-planner/   # override: $ADHD_PLANNER_DIR
 ├── daily/YYYY-MM-DD.md     # Daily logs
 ├── monthly/YYYY-MM.md      # Monthly overviews
 ├── collections/             # Custom lists (ideas, dread tasks, etc.)

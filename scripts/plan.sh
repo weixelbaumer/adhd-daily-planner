@@ -3,7 +3,7 @@ set -euo pipefail
 # ADHD Daily Planner v1.0
 # Bullet Journal style planning for ADHD brains
 
-PLANNER_DIR="${HOME}/.openclaw/skills/adhd-daily-planner"
+PLANNER_DIR="${ADHD_PLANNER_DIR:-${HERMES_HOME:-${HOME}/.hermes}/data/adhd-daily-planner}"
 DAILY_DIR="$PLANNER_DIR/daily"
 MONTHLY_DIR="$PLANNER_DIR/monthly"
 COLLECTIONS_DIR="$PLANNER_DIR/collections"

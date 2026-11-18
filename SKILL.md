@@ -1,31 +1,11 @@
 ---
-name: adhd-founder-planner
+name: adhd-daily-planner
 version: 1.1.0
 description: "This skill should be used when the user asks to 'plan my day', 'help me plan today', 'morning planning', 'what should I work on today', 'daily planner', 'evening reflection', 'reflect on my day', 'migrate tasks', 'carry tasks forward', 'rapid log', 'brain dump my tasks', or mentions ADHD-friendly planning, time-blindness, swim lanes, energy-based task management, bullet journal for ADHD, or dopamine menu. Provides a BuJo-style daily planning system with swim lanes, migration, reflection, and dopamine rewards. Part of the ADHD-founder.com ecosystem."
 homepage: https://adhd-founder.com
 author: ADHD-founder.com
 license: MIT
 keywords: [adhd, planner, bullet-journal, daily, productivity, time-blindness, bujo, planning, founders, dopamine, migration, swim-lanes, energy-management, reflection, neurodivergent, executive-function]
-metadata:
-  clawdbot:
-    emoji: "📝🧠"
-    tags: ["adhd", "planner", "bullet-journal", "daily", "productivity", "time-blindness", "founders", "neurodivergent", "dopamine", "reflection"]
-    category: productivity
-    requires: {}
-    optional:
-      persistence: "For task migration and history"
-      notifications: "For time reminders"
-    examples:
-      - "/adhd-planner today"
-      - "/adhd-planner plan"
-      - "/adhd-planner reflect"
-      - "/adhd-planner migrate"
-      - "Plan my day"
-      - "What should I work on today?"
-      - "Help me with morning planning"
-      - "I need to brain dump my tasks"
-    related_skills: ["adhd-body-doubling"]
-    slug: adhd-founder-planner
 ---
 
 # ADHD Daily Planner 📝🧠
@@ -172,7 +152,7 @@ Built into the planner -- pick rewards BEFORE you need them:
 ## File Structure
 
 ```
-~/.openclaw/skills/adhd-daily-planner/
+~/.hermes/data/adhd-daily-planner/   # override: $ADHD_PLANNER_DIR
 ├── daily/YYYY-MM-DD.md     # Daily logs
 ├── monthly/YYYY-MM.md      # Monthly overviews
 ├── collections/             # Custom lists (ideas, dread, etc.)
