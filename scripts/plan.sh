@@ -1,8 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 # ADHD Daily Planner v1.0
 # Bullet Journal style planning for ADHD brains
 
-PLANNER_DIR="${HOME}/.openclaw/skills/adhd-daily-planner"
+PLANNER_DIR="${ADHD_PLANNER_DIR:-${HERMES_HOME:-${HOME}/.hermes}/data/adhd-daily-planner}"
 DAILY_DIR="$PLANNER_DIR/daily"
 MONTHLY_DIR="$PLANNER_DIR/monthly"
 COLLECTIONS_DIR="$PLANNER_DIR/collections"
@@ -163,8 +164,8 @@ cmd_today() {
     done
     
     # Show completion stats
-    COMPLETED=$(grep -c '^\- \[x\]\|^\- \[X\]' "$TODAY_FILE" 2>/dev/null || echo "0")
-    TOTAL=$(grep -c '^\- \[ \]' "$TODAY_FILE" 2>/dev/null || echo "0")
+    COMPLETED=$(grep -c '^\- \[x\]\|^\- \[X\]' "$TODAY_FILE" 2>/dev/null || true)
+    TOTAL=$(grep -c '^\- \[ \]' "$TODAY_FILE" 2>/dev/null || true)
     TOTAL=$((TOTAL + COMPLETED))
     
     echo "📊 Progress: $COMPLETED/$TOTAL tasks"
@@ -229,7 +230,8 @@ cmd_plan() {
     if [ -z "$ITEM" ]; then
       break
     fi
-    RAPID_LOG="$RAPID_LOG\n- [ ] $ITEM"
+    RAPID_LOG="${RAPID_LOG}
+- [ ] ${ITEM}"
   done
   
   # Step 4: Dopamine menu
@@ -367,7 +369,8 @@ cmd_reflect() {
     if [ -z "$WIN" ]; then
       break
     fi
-    WINS="$WINS\n- × $WIN"
+    WINS="${WINS}
+- × ${WIN}"
   done
   
   # What worked
@@ -380,9 +383,10 @@ cmd_reflect() {
     if [ -z "$ITEM" ]; then
       break
     fi
-    WORKED="$WORKED\n- $ITEM"
+    WORKED="${WORKED}
+- ${ITEM}"
   done
-  
+
   # What didn't
   echo ""
   echo "📊 STEP 3: WHAT DIDN'T?"
@@ -393,7 +397,8 @@ cmd_reflect() {
     if [ -z "$ITEM" ]; then
       break
     fi
-    DIDNT="$DIDNT\n- $ITEM"
+    DIDNT="${DIDNT}
+- ${ITEM}"
   done
   
   # Migration
@@ -410,18 +415,22 @@ cmd_reflect() {
     fi
     echo "  > Migrate to tomorrow (>)"
     echo "  < Schedule for future date"
-    echo "  × Complete it now"
+    echo "  x Complete it now"
     echo "  ~ Drop it (not happening)"
-    read -p "Action (>/<×/~): " ACTION
+    read -p "Action (>/<x/~): " ACTION
     case $ACTION in
-      '>') MIGRATED="$MIGRATED\n- > $TASK (→ tomorrow)" ;;
-      '<') 
+      '>') MIGRATED="${MIGRATED}
+- > ${TASK} (→ tomorrow)" ;;
+      '<')
         read -p "Date (YYYY-MM-DD): " DATE
-        MIGRATED="$MIGRATED\n- < $TASK (→ $DATE)"
-        ;;
-      '×') MIGRATED="$MIGRATED\n- × $TASK (completed now!)" ;;
-      '~') MIGRATED="$MIGRATED\n- ~ ~~$TASK~~ (dropped)" ;;
-      *) MIGRATED="$MIGRATED\n- ? $TASK" ;;
+        MIGRATED="${MIGRATED}
+- < ${TASK} (→ ${DATE})" ;;
+      'x') MIGRATED="${MIGRATED}
+- × ${TASK} (completed now!)" ;;
+      '~') MIGRATED="${MIGRATED}
+- ~ ~~${TASK}~~ (dropped)" ;;
+      *) MIGRATED="${MIGRATED}
+- ? ${TASK}" ;;
     esac
   done
   
@@ -431,23 +440,59 @@ cmd_reflect() {
   echo "What's one thing you'll do differently tomorrow?"
   read -p "> " TOMORROW_LESSON
   
-  # Update the file
-  # Use sed to replace the reflection section
-  # This is a simplified version - in production, use proper template replacement
-  
+  # Write reflection to file
+  # Append a reflection section to the daily file
+  cat >> "$TODAY_FILE" << EOF
+
+---
+
+## 🌙 EVENING REFLECTION (completed)
+
+### ✅ Today's Wins
+${WINS:-
+- (none recorded)}
+
+### 📊 What Worked?
+${WORKED:-
+- (none recorded)}
+
+### 📊 What Didn't?
+${DIDNT:-
+- (none recorded)}
+
+### 🔄 Migrated Tasks
+${MIGRATED:-
+- (none)}
+
+### 🌟 One Thing for Tomorrow
+- ${TOMORROW_LESSON:-(not set)}
+
+---
+
+**Reflected:** $(date +%Y-%m-%d) $TIME_LABEL
+EOF
+
+  # Count stats
+  WIN_COUNT=0
+  WORKED_COUNT=0
+  MIGRATED_COUNT=0
+  [ -n "$WINS" ] && WIN_COUNT=$(echo "$WINS" | grep -c '×' || true)
+  [ -n "$WORKED" ] && WORKED_COUNT=$(echo "$WORKED" | grep -c '^-' || true)
+  [ -n "$MIGRATED" ] && MIGRATED_COUNT=$(echo "$MIGRATED" | grep -c '^-' || true)
+
   echo ""
   echo "═══════════════════════════════════════════════════════"
-  echo "  ✅ REFLECTION COMPLETE!"
+  echo "  ✅ REFLECTION COMPLETE & SAVED!"
   echo "═══════════════════════════════════════════════════════"
   echo ""
   echo "📊 Summary:"
-  echo "  Wins:$(echo -e "$WINS" | grep -c '×')"
-  echo "  What worked: $([ -z "$WORKED" ] && echo "0" || echo "$(echo -e "$WORKED" | grep -c '^-')")"
-  echo "  Migrated: $([ -z "$MIGRATED" ] && echo "0" || echo "$(echo -e "$MIGRATED" | grep -c '^-')")"
+  echo "  Wins: $WIN_COUNT"
+  echo "  What worked: $WORKED_COUNT"
+  echo "  Migrated: $MIGRATED_COUNT"
   echo ""
   echo "Remember: Migration is strategy, not failure!"
   echo ""
-  echo "Update $TODAY_FILE with your reflection."
+  echo "Saved to: $TODAY_FILE"
 }
 
 cmd_migrate() {
@@ -508,9 +553,12 @@ cmd_done() {
   
   create_daily_file
   
-  # Try to mark as complete in file
-  if grep -q "\[ \] $TASK" "$TODAY_FILE" 2>/dev/null; then
-    sed -i.bak "s/\[ \] $TASK/[x] $TASK/" "$TODAY_FILE"
+  # Try to mark as complete in file (use fixed-string grep for safety)
+  if grep -Fq "[ ] $TASK" "$TODAY_FILE" 2>/dev/null; then
+    # Escape sed special chars in task name
+    TASK_SED=$(printf '%s' "$TASK" | sed 's/[&/\]/\\&/g')
+    sed -i.bak "s/\[ \] ${TASK_SED}/[x] ${TASK_SED}/" "$TODAY_FILE"
+    rm -f "${TODAY_FILE}.bak"
     echo "✅ Marked complete: $TASK"
   else
     # Add to wins section
@@ -602,6 +650,7 @@ _What is this month about?_
 | W2   |           |           |            |         |
 | W3   |           |           |            |         |
 | W4   |           |           |            |         |
+| W5   |           |           |            |         |
 
 ---
 
@@ -646,11 +695,11 @@ case "${1:-today}" in
     ;;
   log)
     shift
-    cmd_log "$1"
+    cmd_log "${1:-}"
     ;;
   done)
     shift
-    cmd_done "$1"
+    cmd_done "${1:-}"
     ;;
   dopamine|menu)
     cmd_dopamine
